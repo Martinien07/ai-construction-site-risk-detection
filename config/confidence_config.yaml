@@ -1,0 +1,16 @@
+# confidence_config.yaml
+
+default:
+  person: 0.50
+  machinery: 0.55
+  vehicle: 0.55
+  hardhat: 0.60
+  no_hardhat: 0.70
+  mask: 0.60
+  no_mask: 0.70
+  safety_vest: 0.60
+  no_safety_vest: 0.70
+  utility Pole: 0.50
+
+
+global_min_confidence: 0.30

@@ -1,0 +1,316 @@
+{
+  "metadata": {
+    "version": "1.1",
+    "description": "Règles HSE basées sur activités, caractéristiques visuelles et analyse explicable des EPI",
+    "activities": {
+      "0": "Pas_d_activité",
+      "1": "Circulation",
+      "2": "Travail_en_zone_balisée",
+      "3": "Travail_en_zone_à_risque",
+      "4": "Travail_en_zone_chimique",
+      "5": "Travail_près_machine",
+      "6": "Travail_en_hauteur",
+      "8": "Travail_manuel_stationnaire"
+    }
+  },
+
+  "rules": [
+
+
+
+
+
+    {
+      "rule_id": "R-0-1",
+      "activity_id": 0,
+      "name": "Présence humaine sans activité détectée",
+      "description": "Présence prolongée de personnes sans activité reconnue.",
+
+      "conditions": [
+        { "feature": "person_presence_ratio", "operator": ">", "value": 0.3 }
+      ],
+
+      "risk_weight": 5,
+      "severity": "LOW",
+
+      "recommendation": {
+        "message": "Vérifier la situation : présence humaine sans activité identifiée.",
+        "target": "Superviseur",
+        "priority": "Basse"
+      }
+    },
+
+
+
+
+    {
+      "rule_id": "R-1-1",
+      "activity_id": 1,
+      "name": "Circulation sans EPI",
+      "description": "Déplacement de personnes avec port incomplet des équipements de protection.",
+
+      "conditions": [
+        { "feature": "avg_epi_compliance", "operator": "<", "value": 0.8 }
+      ],
+
+      "epi_analysis": {
+        "helmet": { "feature": "helmet_compliance_ratio", "threshold": 0.8 },
+        "vest":   { "feature": "vest_compliance_ratio",   "threshold": 0.8 },
+        "mask":   { "feature": "mask_compliance_ratio",   "threshold": 0.8 }
+      },
+
+      "risk_weight": 15,
+      "severity": "MEDIUM",
+
+      "recommendation": {
+        "message": "Imposer le port des EPI lors des déplacements.",
+        "target": "Travailleur",
+        "priority": "Normale"
+      }
+    },
+
+    {
+      "rule_id": "R-1-2",
+      "activity_id": 1,
+      "name": "Circulation dense",
+      "description": "Trop grand nombre de personnes en circulation simultanée.",
+
+      "conditions": [
+        { "feature": "crowding_score", "operator": ">", "value": 0.6 }
+      ],
+
+      "risk_weight": 10,
+      "severity": "MEDIUM",
+
+      "recommendation": {
+        "message": "Limiter la circulation simultanée dans cette zone.",
+        "target": "Superviseur",
+        "priority": "Normale"
+      }
+    },
+
+
+
+
+
+
+    {
+      "rule_id": "R-2-1",
+      "activity_id": 2,
+      "name": "Surcharge humaine en zone balisée",
+      "description": "Nombre excessif de personnes dans une zone balisée.",
+
+      "conditions": [
+        { "feature": "num_persons_in_zone", "operator": ">", "value": 5 }
+      ],
+
+      "risk_weight": 15,
+      "severity": "MEDIUM",
+
+      "recommendation": {
+        "message": "Réduire le nombre de travailleurs dans la zone balisée.",
+        "target": "Superviseur",
+        "priority": "Normale"
+      }
+    },
+
+    {
+      "rule_id": "R-2-2",
+      "activity_id": 2,
+      "name": "Travail en zone balisée sans EPI",
+      "description": "Travail en zone balisée avec port incomplet des EPI.",
+
+      "conditions": [
+        { "feature": "avg_epi_compliance", "operator": "<", "value": 0.85 }
+      ],
+
+      "epi_analysis": {
+        "helmet": { "feature": "helmet_compliance_ratio", "threshold": 0.85 },
+        "vest":   { "feature": "vest_compliance_ratio",   "threshold": 0.85 },
+        "mask":   { "feature": "mask_compliance_ratio",   "threshold": 0.85 }
+      },
+
+      "risk_weight": 20,
+      "severity": "MEDIUM",
+
+      "recommendation": {
+        "message": "Vérifier le port des EPI en zone balisée.",
+        "target": "Travailleur",
+        "priority": "Normale"
+      }
+    },
+
+
+
+
+
+
+    {
+      "rule_id": "R-3-1",
+      "activity_id": 3,
+      "name": "Exposition prolongée en zone à risque",
+      "description": "Présence excessive dans une zone classée à haut risque.",
+
+      "conditions": [
+        { "feature": "proportion_time_in_high_risk_zone", "operator": ">", "value": 0.6 }
+      ],
+
+      "risk_weight": 25,
+      "severity": "HIGH",
+
+      "recommendation": {
+        "message": "Limiter la durée d'exposition en zone à risque.",
+        "target": "Superviseur",
+        "priority": "Urgente"
+      }
+    },
+
+    {
+      "rule_id": "R-3-2",
+      "activity_id": 3,
+      "name": "Zone à risque sans EPI",
+      "description": "Travail en zone à risque avec conformité EPI insuffisante.",
+
+      "conditions": [
+        { "feature": "avg_epi_compliance", "operator": "<", "value": 0.9 }
+      ],
+
+      "epi_analysis": {
+        "helmet": { "feature": "helmet_compliance_ratio", "threshold": 0.9 },
+        "vest":   { "feature": "vest_compliance_ratio",   "threshold": 0.9 },
+        "mask":   { "feature": "mask_compliance_ratio",   "threshold": 0.9 }
+      },
+
+      "risk_weight": 30,
+      "severity": "HIGH",
+
+      "recommendation": {
+        "message": "Renforcer immédiatement le port des EPI en zone à risque.",
+        "target": "Superviseur",
+        "priority": "Urgente"
+      }
+    },
+
+
+
+
+
+
+    {
+      "rule_id": "R-4-1",
+      "activity_id": 4,
+      "name": "Zone chimique sans masque",
+      "description": "Présence en zone chimique sans port correct du masque.",
+
+      "conditions": [
+        { "feature": "mask_compliance_ratio", "operator": "<", "value": 0.9 }
+      ],
+
+      "epi_analysis": {
+        "mask": { "feature": "mask_compliance_ratio", "threshold": 0.9 }
+      },
+
+      "risk_weight": 30,
+      "severity": "HIGH",
+
+      "recommendation": {
+        "message": "Port du masque obligatoire en zone chimique.",
+        "target": "Travailleur",
+        "priority": "Urgente"
+      }
+    },
+
+
+
+
+
+
+    {
+      "rule_id": "R-5-1",
+      "activity_id": 5,
+      "name": "Proximité dangereuse homme-machine",
+      "description": "Un travailleur est trop proche d'une machine pendant une durée prolongée.",
+
+      "conditions": [
+        { "feature": "min_person_machine_distance", "operator": "<", "value": 1.5 },
+        { "feature": "time_near_machine", "operator": ">", "value": 3.0 }
+      ],
+
+      "epi_analysis": {
+        "helmet": { "feature": "helmet_compliance_ratio", "threshold": 0.85 },
+        "vest":   { "feature": "vest_compliance_ratio",   "threshold": 0.85 }
+      },
+
+      "risk_weight": 25,
+      "severity": "HIGH",
+
+      "recommendation": {
+        "message": "Augmenter la distance de sécurité et vérifier les EPI.",
+        "target": "Superviseur",
+        "priority": "Immédite"
+      }
+    },
+
+
+
+
+
+    {
+      "rule_id": "R-6-1",
+      "activity_id": 6,
+      "name": "Travail en hauteur sans EPI",
+      "description": "Travail en hauteur avec port incomplet des équipements de protection visibles.",
+
+      "conditions": [
+        { "feature": "avg_epi_compliance", "operator": "<", "value": 0.9 }
+      ],
+
+      "epi_analysis": {
+        "helmet": { "feature": "helmet_compliance_ratio", "threshold": 0.9 },
+        "vest":   { "feature": "vest_compliance_ratio",   "threshold": 0.9 }
+      },
+
+      "risk_weight": 35,
+      "severity": "HIGH",
+
+      "recommendation": {
+        "message": "Interrompre l'activité et vérifier les équipements de protection.",
+        "target": "Superviseur",
+        "priority": "Immédite"
+      }
+    },
+
+
+
+
+
+    
+
+    {
+      "rule_id": "R-8-1",
+      "activity_id": 8,
+      "name": "Travail manuel stationnaire sans EPI",
+      "description": "Travail manuel stationnaire avec port incomplet des EPI.",
+
+      "conditions": [
+        { "feature": "avg_epi_compliance", "operator": "<", "value": 0.8 }
+      ],
+
+      "epi_analysis": {
+        "helmet": { "feature": "helmet_compliance_ratio", "threshold": 0.8 },
+        "vest":   { "feature": "vest_compliance_ratio",   "threshold": 0.8 },
+        "mask":   { "feature": "mask_compliance_ratio",   "threshold": 0.8 }
+      },
+
+      "risk_weight": 20,
+      "severity": "MEDIUM",
+
+      "recommendation": {
+        "message": "Vérifier le port des EPI lors du travail manuel.",
+        "target": "Travailleur",
+        "priority": "Normale"
+      }
+    }
+
+  ]
+}
