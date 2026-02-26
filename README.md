@@ -43,8 +43,8 @@ Flux vidéo
 
 Structure du projet
 
-"
-/data
+
+"/data
     /raw
     /processed
     /features
@@ -57,8 +57,7 @@ Structure du projet
     /web
 
 /notebooks
-/docs
-"
+/docs"
 
 
 
