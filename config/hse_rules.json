@@ -1,0 +1,96 @@
+{
+  "risk_levels": {
+    "FAIBLE": {"min": 0, "max": 20, "color": "green"},
+    "MOYEN": {"min": 21, "max": 40, "color": "yellow"},
+    "ELEVE": {"min": 41, "max": 70, "color": "orange"},
+    "CRITIQUE": {"min": 71, "max": 100, "color": "red"}
+  },
+  "general_requirements": {
+    "ppe_helmet": {
+      "feature": "helmet_compliance_ratio",
+      "threshold": 0.90,
+      "weight": 100,
+      "critical_veto": true,
+      "msg": "CRITIQUE: Casque absent. Risque vital immédiat."
+    },
+    "ppe_vest": {
+      "feature": "vest_compliance_ratio",
+      "threshold": 0.90,
+      "weight": 100,
+      "critical_veto": true,
+      "msg": "CRITIQUE: Gilet absent. Risque de non-visibilité mortel."
+    },
+    "epi_global": {
+      "feature": "avg_epi_compliance",
+      "threshold": 0.85,
+      "weight": 80,
+      "critical_veto": false,
+      "msg": "ELEVE: Conformité EPI globale insuffisante."
+    }
+  },
+  "activity_rules": {
+    "0": {
+      "name": "Pas_d_activité",
+      "base_risk": 0,
+      "checks": [
+        {"feature": "avg_num_persons", "max": 0, "weight": 0, "msg": "Attente prolongée ."}
+      ]
+    },
+    "1": {
+      "name": "Circulation",
+      "base_risk": 5,
+      "checks": [
+        {"feature": "avg_person_speed", "max": 2.5, "weight": 30, "msg": "Vitesse de circulation excessive."},
+        {"feature": "direction_variance", "max": 0.15, "weight": 20, "msg": "Trajectoire dangereuse."}
+      ]
+    },
+    "2": {
+      "name": "Travail_en_zone_balisée",
+      "base_risk": 10,
+      "checks": [
+        {"feature": "num_persons_in_zone", "max": 5, "weight": 40, "msg": "Surcharge de zone."},
+        {"feature": "avg_person_speed", "max": 0.6, "weight": 25, "msg": "Mouvements trop rapides en zone de travail."}
+      ]
+    },
+    "3": {
+      "name": "Travail_en_zone_à_risque",
+      "base_risk": 30,
+      "checks": [
+        {"feature": "proportion_time_in_high_risk_zone", "min": 0.4, "weight": 45, "msg": "Exposition prolongée au danger."},
+        {"feature": "erratic_motion_score", "max": 0.4, "weight": 30, "msg": "Comportement instable en zone risquée."}
+      ]
+    },
+    "4": {
+      "name": "Travail_en_zone_chimique",
+      "base_risk": 45,
+      "checks": [
+        {"feature": "avg_epi_compliance", "min": 0.98, "weight": 100, "critical_veto": true, "msg": "DANGER CHIMIQUE: Protection incomplète."},
+        {"feature": "num_people_in_high_risk_zone", "max": 1, "weight": 40, "msg": "Trop de personnes en zone confinée."}
+      ]
+    },
+    "5": {
+      "name": "Travail_près_machine",
+      "base_risk": 40,
+      "checks": [
+        {"feature": "min_person_machine_distance", "min": 0.7, "weight": 60, "msg": "Zone d'exclusion machine non respectée."},
+        {"feature": "dangerous_proximity_frames", "max": 0, "weight": 100, "critical_veto": true, "msg": "COLLISION IMMINENTE: Proximité machine critique."}
+      ]
+    },
+    "6": {
+      "name": "Travail_en_hauteur",
+      "base_risk": 50,
+      "checks": [
+        {"feature": "motion_consistency", "max": 0.2, "weight": 50, "msg": "Instabilité détectée : risque de chute."},
+        {"feature": "helmet_compliance_ratio", "min": 1.0, "weight": 100, "critical_veto": true, "msg": "HAUTEUR: Casque non porté (Chute mortelle)."}
+      ]
+    },
+    "8": {
+      "name": "Travail_manuel_stationnaire",
+      "base_risk": 15,
+      "checks": [
+        {"feature": "activity_persistence_score", "min": 0.7, "weight": 20, "msg": "Incohérence dans le travail manuel."},
+        {"feature": "motion_consistency", "max": 0.4, "weight": 25, "msg": "Gestes brusques détectés."}
+      ]
+    }
+  }
+}
