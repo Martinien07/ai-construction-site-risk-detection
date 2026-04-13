@@ -1,0 +1,28 @@
+# Environnement
+.env
+
+# Datasets (très lourds)
+dataset/
+dataset machine learning/
+dataset yolo/
+
+# Images et fichiers lourds
+*.zip
+*.jpg
+*.png
+*.jpeg
+
+# Modèles entraînés (poids lourds)
+*.pt
+*.pth
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Fichiers système
+.DS_Store
+Thumbs.db
